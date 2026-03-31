@@ -72,7 +72,10 @@
             z-index: 1000;
             text-shadow: none;
         }
-        .desktop-icon:hover::after { display: block; transition-delay: 0.8s; }
+        .desktop-icon:hover::after {
+            display: block;
+            transition-delay: 0.8s;
+        }
 
         /* --- WINDOWS --- */
         .window { position: absolute; display: none; z-index: 10; box-shadow: 8px 8px 30px rgba(0,0,0,0.6); min-width: 300px; }
@@ -82,27 +85,7 @@
         /* --- UI ELEMENTS --- */
         .explorer-grid { display: flex; flex-wrap: wrap; gap: 20px; padding: 10px; }
         .file-item { width: 90px; text-align: center; cursor: pointer; font-size: 11px; color: black; margin-bottom: 10px; }
-        
-        /* SIMPLE FOLDER LOGO REPLACEMENT (CSS ONLY) */
-        .simple-folder {
-            width: 40px; height: 30px;
-            background: #ffd700;
-            margin: 5px auto 10px;
-            position: relative;
-            border-radius: 2px;
-            border: 1px solid #b8860b;
-            box-shadow: 1px 1px 0px black;
-        }
-        .simple-folder::before {
-            content: '';
-            width: 15px; height: 5px;
-            background: #ffd700;
-            position: absolute; top: -5px; left: 0;
-            border-radius: 2px 2px 0 0;
-            border: 1px solid #b8860b;
-            border-bottom: none;
-        }
-
+        .file-item img { width: 40px; height: 40px; display: block; margin: 0 auto 5px; }
         .file-item:hover { background: #b0c4de; outline: 1px dotted #000080; }
 
         /* --- MATRIX DIGITAL RAIN --- */
@@ -245,11 +228,11 @@
     <div class="window-body">
         <div class="explorer-grid">
             <div class="file-item" onclick="toggleWin('win-sub-conf')">
-                <div class="simple-folder"></div>
+                <img src="https://win98icons.alexmeub.com/icons/png/directory_closed-4.png">
                 <span>CONFERENCES</span>
             </div>
             <div class="file-item" onclick="toggleWin('win-sub-pubs')">
-                <div class="simple-folder"></div>
+                <img src="https://win98icons.alexmeub.com/icons/png/directory_closed-4.png">
                 <span>PUBLICATIONS</span>
             </div>
         </div>
