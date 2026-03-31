@@ -19,6 +19,19 @@
             user-select: none;
         }
 
+        /* --- BSOD SCREEN --- */
+        #bsod {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #0000AA;
+            color: white;
+            font-family: "Lucida Console", Monaco, monospace;
+            padding: 50px;
+            z-index: 9999;
+            cursor: none;
+        }
+
         /* --- DESKTOP --- */
         #desktop {
             height: calc(100vh - 40px);
@@ -33,6 +46,7 @@
         .desktop-icon {
             width: 130px; text-align: center; cursor: pointer;
             color: white; text-shadow: 2px 2px 2px black; font-size: 14px;
+            position: relative;
         }
 
         .desktop-icon img {
@@ -41,6 +55,27 @@
         }
 
         .desktop-icon:hover { background: rgba(255,255,255,0.2); outline: 1px dotted white; }
+
+        /* --- TOOLTIP STYLE --- */
+        .desktop-icon::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: -30px; left: 50%;
+            transform: translateX(-50%);
+            background: #ffffe1;
+            color: black;
+            border: 1px solid black;
+            padding: 2px 5px;
+            font-size: 11px;
+            white-space: nowrap;
+            display: none;
+            z-index: 1000;
+            text-shadow: none;
+        }
+        .desktop-icon:hover::after {
+            display: block;
+            transition-delay: 0.8s;
+        }
 
         /* --- WINDOWS --- */
         .window { position: absolute; display: none; z-index: 10; box-shadow: 8px 8px 30px rgba(0,0,0,0.6); min-width: 300px; }
@@ -53,7 +88,22 @@
         .file-item img { width: 40px; height: 40px; display: block; margin: 0 auto 5px; }
         .file-item:hover { background: #b0c4de; outline: 1px dotted #000080; }
 
-        .terminal { background: #000; color: #0f0; font-family: 'Courier New', monospace; padding: 15px; font-size: 14px; line-height: 1.5; }
+        /* --- MATRIX DIGITAL RAIN (FEATURE 1) --- */
+        .terminal { background: #000; color: #0f0; font-family: 'Courier New', monospace; padding: 15px; font-size: 14px; line-height: 1.5; position: relative; }
+        
+        #matrix-canvas {
+            display: none;
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1;
+            opacity: 0.8;
+        }
+        .terminal-content {
+            position: relative;
+            z-index: 2; /* Keep skills text readable on top */
+        }
+
         .taskbar { position: fixed; bottom: 0; left: 0; right: 0; height: 38px; background: #c0c0c0; border-top: 2px solid white; display: flex; align-items: center; padding: 2px 10px; z-index: 1000; }
         
         .cv-section-title { font-weight: bold; border-bottom: 2px solid #000; margin-top: 20px; margin-bottom: 10px; font-size: 14px; text-transform: uppercase; }
@@ -70,39 +120,48 @@
 </head>
 <body onclick="playStartup()">
 
+<div id="bsod" onclick="location.reload()">
+    <center><h2 style="background:white; color:#0000AA; display:inline-block; padding: 0 10px; margin-top:100px;">Windows</h2></center>
+    <p style="margin-top:40px;">A fatal exception 0E has occurred at 0028:C0011E36 in VXD VMM(01) + 00010E36.</p>
+    <p>The current application will be terminated. Memory dump at address 0x80421000.</p>
+    <p>* Press any key to terminate the current application.<br>
+    * Press CTRL+ALT+DEL again to restart your computer. You will lose any unsaved information in all applications.</p>
+    <center><p style="margin-top:50px;">Press any key to continue _</p></center>
+</div>
+
 <audio id="startup-sound" src="https://theisozone.com/sounds/win95.mp3" preload="auto"></audio>
 <audio id="click-sound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" preload="auto"></audio>
 
 <div id="desktop">
-    <div class="desktop-icon" onclick="toggleWin('win-about')">
+    <div class="desktop-icon" data-tooltip="Read My Bio" onclick="toggleWin('win-about')">
         <img src="https://win98icons.alexmeub.com/icons/png/user_world-0.png">
         <span>BIO.TXT</span>
     </div>
-    <div class="desktop-icon" onclick="toggleWin('win-edu')">
+    <div class="desktop-icon" data-tooltip="Academic Background" onclick="toggleWin('win-edu')">
         <img src="https://win98icons.alexmeub.com/icons/png/directory_closed-4.png">
         <span>ACADEMIA</span>
     </div>
-    <div class="desktop-icon" onclick="toggleWin('win-research')">
+    <div class="desktop-icon" data-tooltip="Search Thesis Data" onclick="toggleWin('win-research')">
         <img src="https://win98icons.alexmeub.com/icons/png/search_file-2.png">
         <span>RESEARCH</span>
     </div>
-    <div class="desktop-icon" onclick="toggleWin('win-teaching')">
+    <div class="desktop-icon" data-tooltip="Teaching Experience" onclick="toggleWin('win-teaching')">
         <img src="https://win98icons.alexmeub.com/icons/png/users-0.png">
         <span>TEACHING</span>
     </div>
-    <div class="desktop-icon" onclick="toggleWin('win-pubs-explorer')">
-        <img src="https://win98icons.alexmeub.com/icons/png/directory_open_cabinet_v1-0.png">
+    <div class="desktop-icon" data-tooltip="Journal & Conference Papers" onclick="toggleWin('win-pubs-explorer')">
+        <img src="https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png">
         <span>PUBLICATIONS</span>
     </div>
-    <div class="desktop-icon" onclick="toggleWin('win-sys')">
+    <div class="desktop-icon" data-tooltip="Tech Stack & Methods" onclick="toggleWin('win-sys')">
         <img src="https://win98icons.alexmeub.com/icons/png/settings_gear-0.png">
         <span>SKILLS</span>
     </div>
-    <div class="desktop-icon" onclick="toggleWin('win-contact')">
+    <div class="desktop-icon" data-tooltip="Get In Touch" onclick="toggleWin('win-contact')">
         <img src="https://win98icons.alexmeub.com/icons/png/outlook_express-4.png">
         <span>CONTACT.DOC</span>
     </div>
-    <div class="desktop-icon" onclick="toggleWin('win-games')">
+    <div class="desktop-icon" data-tooltip="Play Classic Snake" onclick="toggleWin('win-games')">
         <img src="https://win98icons.alexmeub.com/icons/png/game_freecell-0.png">
         <span>SNAKE.EXE</span>
     </div>
@@ -227,13 +286,16 @@
 </div>
 
 <div id="win-sys" class="window" style="top: 350px; left: 400px; width: 600px;">
-    <div class="title-bar"><div class="title-bar-text">Skills Diagnostics</div><div class="title-bar-controls"><button aria-label="Close" onclick="toggleWin('win-sys')"></button></div></div>
+    <div class="title-bar"><div class="title-bar-text">Skills Diagnostics (Type 'matrix')</div><div class="title-bar-controls"><button aria-label="Close" onclick="toggleWin('win-sys')"></button></div></div>
     <div class="window-body">
-        <div class="terminal">
-            C:\> system_diagnostics --skills<br><br>
-            [SKILLS]: Python, R, STATA, tidyverse, Pandas, Matplotlib, Geopandas, Numpy, Beautiful Soup, Selenium, EasyOCR, NLTK, spaCy, Hugging face, Transformers, CSC server, Puhti, Allas, OpenCV.<br><br>
-            [METHODS]: Conjoint Experiments, Social Media Analysis (YouTube, Instagram, TikTok), Multivariate Analysis, Machine Learning, Representation Learning.<br><br>
-            C:\> _<span id="cursor">|</span>
+        <div id="terminal-body" class="terminal">
+            <canvas id="matrix-canvas"></canvas>
+            <div class="terminal-content">
+                C:\> system_diagnostics --skills<br><br>
+                [SKILLS]: Python, R, STATA, tidyverse, Pandas, Matplotlib, Geopandas, Numpy, Beautiful Soup, Selenium, EasyOCR, NLTK, spaCy, Hugging face, Transformers, CSC server, Puhti, Allas, OpenCV.<br><br>
+                [METHODS]: Conjoint Experiments, Social Media Analysis (YouTube, Instagram, TikTok), Multivariate Analysis, Machine Learning, Representation Learning.<br><br>
+                C:\> _<span id="cursor">|</span>
+            </div>
         </div>
     </div>
 </div>
@@ -280,30 +342,112 @@
         <div class="start-item" onclick="toggleWin('win-games')">🎮 Snake.exe</div>
         <hr>
         <div class="start-item" onclick="window.location.reload()">🔒 Restart System</div>
+        <div class="start-item" onclick="triggerBSOD()">Shut Down...</div>
     </div>
     <div style="margin-left: auto; border: 1px inset gray; padding: 3px 12px; background: #c0c0c0; font-weight: bold;" id="clock">00:00</div>
 </div>
 
 <script>
     let isInitialized = false;
+    let matrixBuffer = "";
+    let matrixInterval = null;
+
     function playStartup() {
         if (!isInitialized) {
             document.getElementById('startup-sound').play();
             isInitialized = true;
         }
     }
+
     function playClick() {
         const sound = document.getElementById('click-sound');
         sound.currentTime = 0;
         sound.play();
     }
 
+    // FEATURE: BSOD FOR SHUTDOWN
+    function triggerBSOD() {
+        playClick();
+        document.getElementById('bsod').style.display = 'block';
+    }
+
+    // FEATURE: MATRIX DIGITAL RAIN (FIXED & Preserved Content)
+    const mCanvas = document.getElementById('matrix-canvas');
+    const mCtx = mCanvas.getContext('2d');
+    const tBody = document.getElementById('terminal-body');
+
+    function resizeMatrixCanvas() {
+        mCanvas.width = tBody.offsetWidth;
+        mCanvas.height = tBody.offsetHeight;
+    }
+
+    const characters = "01";
+    const fontSize = 14;
+    let drops = [];
+
+    function initMatrixDrops() {
+        const columns = mCanvas.width / fontSize;
+        drops = [];
+        for (let x = 0; x < columns; x++) { drops[x] = 1; }
+    }
+
+    function drawMatrixRain() {
+        // Subtle black background fade for trail effect
+        mCtx.fillStyle = "rgba(0, 0, 0, 0.05)";
+        mCtx.fillRect(0, 0, mCanvas.width, mCanvas.height);
+
+        mCtx.fillStyle = "#0F0"; // Green text
+        mCtx.font = fontSize + "px monospace";
+
+        for (let i = 0; i < drops.length; i++) {
+            const text = characters.charAt(Math.floor(Math.random() * characters.length));
+            mCtx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+            // Reset drop to top randomly after hitting bottom
+            if (drops[i] * fontSize > mCanvas.width && Math.random() > 0.975) {
+                drops[i] = 0;
+            }
+            drops[i]++;
+        }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        matrixBuffer += e.key.toLowerCase();
+        if(matrixBuffer.includes("matrix")) {
+            if (!matrixInterval) {
+                // Turn ON
+                mCanvas.style.display = 'block';
+                resizeMatrixCanvas();
+                initMatrixDrops();
+                matrixInterval = setInterval(drawMatrixRain, 33); // ~30fps
+            } else {
+                // Turn OFF
+                mCanvas.style.display = 'none';
+                clearInterval(matrixInterval);
+                matrixInterval = null;
+                mCtx.clearRect(0, 0, mCanvas.width, mCanvas.height); // Clear last frame
+            }
+            matrixBuffer = "";
+        }
+        if(matrixBuffer.length > 10) matrixBuffer = matrixBuffer.substring(1);
+    });
+
+    // Window Resize Handler for Matrix
+    window.addEventListener('resize', () => {
+        if (matrixInterval) {
+            resizeMatrixCanvas();
+            initMatrixDrops();
+        }
+    });
+
+    // WINDOW SYSTEM
     function toggleWin(id) {
         playClick();
         const win = document.getElementById(id);
         win.style.display = (win.style.display === 'none' || win.style.display === '') ? 'block' : 'none';
         if(win.style.display === 'block') bringToFront(win);
     }
+
     function toggleStartMenu() {
         playClick();
         const menu = document.getElementById('start-menu');
@@ -340,7 +484,7 @@
     }
     setInterval(updateClock, 1000); updateClock();
 
-    // SNAKE LOGIC
+    // SNAKE GAME CODE (Fully Preserved)
     let snakeGameActive = false;
     let snakeTimeout;
     const highScoreEl = document.getElementById('high-score');
@@ -386,6 +530,7 @@
             ctx.fillStyle = "white"; ctx.textAlign = "center"; ctx.fillText("GAME OVER", 150, 150);
         }
         document.onkeydown = e => {
+            if (!snakeGameActive) return; // Don't interfere if game over
             if(e.key === "ArrowUp" && dy !== 1) { dx=0; dy=-1; }
             else if(e.key === "ArrowDown" && dy !== -1) { dx=0; dy=1; }
             else if(e.key === "ArrowLeft" && dx !== 1) { dx=-1; dy=0; }
