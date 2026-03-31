@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vaibhav Agarwal | Research Workstation v4.0</title>
+    <link rel="stylesheet" href="https://unpkg.com/7.css">
+    <style>
+        :root { 
+            --teal: #008080; 
+            --desktop-icon-size: 72px; 
+            --folder-icon-size: 56px;
+        }
+        body {
+            background-color: var(--teal);
+            margin: 0; padding: 0;
+            font-family: "MS Sans Serif", Arial, sans-serif;
+            height: 100vh; overflow: hidden;
+            user-select: none;
+        }
+
+        /* --- DESKTOP --- */
+        #desktop {
+            height: calc(100vh - 40px);
+            padding: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 140px);
+            grid-template-rows: repeat(auto-fill, 150px);
+            grid-auto-flow: column;
+            gap: 15px;
+        }
+
+        .desktop-icon {
+            width: 130px; text-align: center; cursor: pointer;
+            color: white; text-shadow: 2px 2px 2px black; font-size: 14px;
+        }
+
+        .desktop-icon img {
+            width: var(--desktop-icon-size); height: var(--desktop-icon-size);
+            display: block; margin: 0 auto 10px; image-rendering: pixelated;
+        }
+
+        .desktop-icon:hover { background: rgba(255,255,255,0.2); outline: 1px dotted white; }
+
+        /* --- WINDOWS --- */
+        .window { position: absolute; display: none; z-index: 10; box-shadow: 8px 8px 30px rgba(0,0,0,0.6); min-width: 300px; }
+        .window-body { margin: 12px; overflow-y: auto; max-height: 550px; background: #fff; border: 2px inset gray; padding: 15px; }
+        .title-bar { cursor: move; padding: 5px; }
+
+        /* --- UI ELEMENTS --- */
+        .explorer-grid { display: flex; flex-wrap: wrap; gap: 20px; padding: 10px; }
+        .file-item { width: 90px; text-align: center; cursor: pointer; font-size: 11px; color: black; margin-bottom: 10px; }
+        .file-item img { width: 40px; height: 40px; display: block; margin: 0 auto 5px; }
+        .file-item:hover { background: #b0c4de; outline: 1px dotted #000080; }
+
+        .terminal { background: #000; color: #0f0; font-family: 'Courier New', monospace; padding: 15px; font-size: 14px; line-height: 1.5; }
+        .taskbar { position: fixed; bottom: 0; left: 0; right: 0; height: 38px; background: #c0c0c0; border-top: 2px solid white; display: flex; align-items: center; padding: 2px 10px; z-index: 1000; }
+        
+        .cv-section-title { font-weight: bold; border-bottom: 2px solid #000; margin-top: 20px; margin-bottom: 10px; font-size: 14px; text-transform: uppercase; }
+        .cv-block { margin-bottom: 15px; padding-left: 5px; border-left: 3px solid #c0c0c0; line-height: 1.4; }
+        
+        .start-menu { position: absolute; bottom: 38px; left: 0; width: 280px; background: #c0c0c0; border: 2px solid; border-color: white gray gray white; display: none; z-index: 1001; box-shadow: 2px 2px 10px black; }
+        .start-item { padding: 12px; display: flex; align-items: center; cursor: pointer; border-bottom: 1px solid #808080; }
+        .start-item:hover { background: #000080; color: white; }
+
+        #snake-container { background: #000; padding: 10px; border: 2px inset gray; }
+        #snake-canvas { background: #000; display: block; margin: 0 auto; border: 1px solid #333; }
+        .game-stats { color: #0f0; font-family: 'Courier New', monospace; margin-bottom: 10px; display: flex; justify-content: space-around; }
+    </style>
+</head>
+<body onclick="playStartup()">
+
+<audio id="startup-sound" src="https://theisozone.com/sounds/win95.mp3" preload="auto"></audio>
+<audio id="click-sound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" preload="auto"></audio>
+
+<div id="desktop">
+    <div class="desktop-icon" onclick="toggleWin('win-about')">
+        <img src="https://win98icons.alexmeub.com/icons/png/user_world-0.png">
+        <span>BIO.TXT</span>
+    </div>
+    <div class="desktop-icon" onclick="toggleWin('win-edu')">
+        <img src="https://win98icons.alexmeub.com/icons/png/directory_closed-4.png">
+        <span>ACADEMIA</span>
+    </div>
+    <div class="desktop-icon" onclick="toggleWin('win-research')">
+        <img src="https://win98icons.alexmeub.com/icons/png/search_file-2.png">
+        <span>RESEARCH</span>
+    </div>
+    <div class="desktop-icon" onclick="toggleWin('win-teaching')">
+        <img src="https://win98icons.alexmeub.com/icons/png/users-0.png">
+        <span>TEACHING</span>
+    </div>
+    <div class="desktop-icon" onclick="toggleWin('win-pubs-explorer')">
+        <img src="https://win98icons.alexmeub.com/icons/png/directory_open_cabinet_v1-0.png">
+        <span>PUBLICATIONS</span>
+    </div>
+    <div class="desktop-icon" onclick="toggleWin('win-sys')">
+        <img src="https://win98icons.alexmeub.com/icons/png/settings_gear-0.png">
+        <span>SKILLS</span>
+    </div>
+    <div class="desktop-icon" onclick="toggleWin('win-contact')">
+        <img src="https://win98icons.alexmeub.com/icons/png/outlook_express-4.png">
+        <span>CONTACT.DOC</span>
+    </div>
+    <div class="desktop-icon" onclick="toggleWin('win-games')">
+        <img src="https://win98icons.alexmeub.com/icons/png/game_freecell-0.png">
+        <span>SNAKE.EXE</span>
+    </div>
+</div>
+
+<div id="win-about" class="window" style="top: 20px; left: 40px; width: 680px; display: block;">
+    <div class="title-bar"><div class="title-bar-text">Notepad - BIO.TXT</div><div class="title-bar-controls"><button aria-label="Close" onclick="toggleWin('win-about')"></button></div></div>
+    <div class="window-body">
+        <h3>Vaibhav Agarwal</h3>
+        <p><strong>Nationality:</strong> Indian | <strong>Date of Birth:</strong> 21/02/2002</p>
+        <p><strong>Current Role:</strong> 1st year Doctoral Researcher at AGAPP–TUS7AGP.</p>
+        <hr>
+        <p>Hello, I’m Vaibhav Agarwal, a passionate and hard-working first-year doctoral researcher at the Professorship for Algorithmic Governance and Public Policy at the Munich School of Politics and Public Policy, Technical University of Munich. I am interested in how algorithmic governance and digitalisation shape public trust, with a particular focus on the heuristics people use when making decisions. My research also explores methods and data suited to uncovering these patterns, especially conjoint experiments. Beyond this, I experiment with multimodal approaches that bring together text, audio, image, and video. I enjoy presenting my research in accessible and creative formats, ranging from presentations and articles to videos and posters.</p>
+        <p>I have grown up in Bangalore, a city in Southern India, where I pursued my Bachelor of Arts in Economics with a minor in Data, Democracy, and Development from Azim Premji University. For my master’s I traveled to Helsinki to study Social Data Science and graduated with a Master’s in Social Sciences from the University of Helsinki. At present, I am starting my doctoral research at the Munich School of Politics and Public Policy at the Technical University of Munich, in Germany.</p>
+    </div>
+</div>
+
+<div id="win-edu" class="window" style="top: 80px; left: 100px; width: 600px;">
+    <div class="title-bar"><div class="title-bar-text">Exploring - D:\Academia</div><div class="title-bar-controls"><button aria-label="Close" onclick="toggleWin('win-edu')"></button></div></div>
+    <div class="window-body">
+        <div class="cv-section-title">Academic History</div>
+        <div class="cv-block">
+            <strong>Technical University of Munich</strong><br>
+            Doctoral Researcher - AGAPP-TUS7AGP<br>
+            September 2025 – Present
+        </div>
+        <div class="cv-block">
+            <strong>University of Helsinki, Helsinki, Finland</strong><br>
+            Master’s in Contemporary Societies, Social Data Science Track<br>
+            August 2023 to June 2025
+        </div>
+        <div class="cv-block">
+            <strong>Azim Premji University, Bangalore, India</strong><br>
+            Bachelor of Arts, Economics | GPA: 8.1/10<br>
+            Minor in Data, Democracy & Development Economics<br>
+            July 2020 to May 2023
+        </div>
+        <div class="cv-block">
+            <strong>Deens Academy, Bangalore, India</strong><br>
+            High School Diploma, Commerce, General<br>
+            AISSCE: 87%; AISSE: 89.6%<br>
+            July 2015 - March 2020
+        </div>
+    </div>
+</div>
+
+<div id="win-research" class="window" style="top: 140px; left: 150px; width: 750px;">
+    <div class="title-bar"><div class="title-bar-text">C:\Research\Data_Log</div><div class="title-bar-controls"><button aria-label="Close" onclick="toggleWin('win-research')"></button></div></div>
+    <div class="window-body">
+        <div class="cv-section-title">Master's Thesis</div>
+        <p><strong>University of Helsinki:</strong> <em>"Evaluation of Algorithmic Systems in Public Governance: Testing Methodological Cohesion in Conjoint Analysis"</em></p>
+        <ul>
+            <li>Examining public perceptions of algorithmic decision-making (ADM) systems with a focus on understanding trust and legitimacy.</li>
+            <li>Exploring how conjoint experiments can reveal nuanced patterns in human decision-making.</li>
+            <li>Comparing standard estimation methods (Marginal Means, AMCE, ACP) and applying latent class analysis to investigate attribute non-attendance.</li>
+        </ul>
+        
+        <div class="cv-section-title">Relevant Experience</div>
+        <div class="cv-block">
+            <strong>University of Helsinki - Faculty of Social Sciences</strong> (Jan 2024-July 2025)<br>
+            • RA - AGAPP Project: Working with new datasets involving control/treatment group designs; literature review on estimands and emerging themes.<br>
+            • RA - AGAPP & HEPP: Understanding conjoint experiments and clean pipelines for MM, AMCE, ACP.<br>
+            • HEPP: Managed 3 TB of data using Puhti and Allas; video/auditory analysis using OpenCV and Whisper; Named Entity Correction for political actors.
+        </div>
+        <div class="cv-block">
+            <strong>Azim Premji University</strong><br>
+            • RA - Prachi Bansal: Estimated state of care infrastructure in India via web-scrapping, data analysis, and literature reviews.<br>
+            • Social Audit Intern - SSAAT Telangana: Facilitated social audits for MGNREGA scheme throughout Telangana; spread worker's rights awareness.
+        </div>
+    </div>
+</div>
+
+<div id="win-pubs-explorer" class="window" style="top: 180px; left: 320px; width: 500px;">
+    <div class="title-bar"><div class="title-bar-text">Exploring - C:\My_Work\Publications</div><div class="title-bar-controls"><button aria-label="Close" onclick="toggleWin('win-pubs-explorer')"></button></div></div>
+    <div class="window-body">
+        <div class="explorer-grid">
+            <div class="file-item" onclick="toggleWin('win-sub-conf')">
+                <img src="https://win98icons.alexmeub.com/icons/png/directory_closed-4.png">
+                <span>CONFERENCES</span>
+            </div>
+            <div class="file-item" onclick="toggleWin('win-sub-pubs')">
+                <img src="https://win98icons.alexmeub.com/icons/png/directory_closed-4.png">
+                <span>PUBLICATIONS</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="win-sub-conf" class="window" style="top: 220px; left: 350px; width: 550px;">
+    <div class="title-bar"><div class="title-bar-text">Conferences & Hackathons</div><div class="title-bar-controls"><button aria-label="Close" onclick="toggleWin('win-sub-conf')"></button></div></div>
+    <div class="window-body">
+        <div class="cv-section-title">Conferences</div>
+        <p><strong>DHNB2025 'Digital Dreams and Practices':</strong> Short Presentation - "Applying Self Organizing Maps (SOM) to PERMA-H Framework".</p>
+        <p><strong>APU Student Research Conclave 2023:</strong><br>
+        • Oral: "Computing the Impact of Investment in Renewable Energy Projects" (Published at SRC Journal).<br>
+        • Poster: "Development of Accessible and Comprehensible Data Visualizations".</p>
+        <div class="cv-section-title">Volunteer</div>
+        <p><strong>HYY Board Member - International Committee:</strong> Responsible for IC Website maintenance and advocating for international student rights.</p>
+    </div>
+</div>
+
+<div id="win-sub-pubs" class="window" style="top: 250px; left: 380px; width: 600px;">
+    <div class="title-bar"><div class="title-bar-text">Academic Publications</div><div class="title-bar-controls"><button aria-label="Close" onclick="toggleWin('win-sub-pubs')"></button></div></div>
+    <div class="window-body">
+        <div class="cv-section-title">Journal & Proceedings</div>
+        <p>Munshi, Mahdi & Pentikäinen, Viivi & Agarwal, Vaibhav & Lagus, Krista. (2026). <strong>Applying Self-Organizing Maps (SOM) to PERMA+H Framework: Analysing Well-Being Expressions in Suomi24 Online Discussions.</strong> Digital Humanities in the Nordic and Baltic Countries Publications. 7. 10.5617/dhnbpub.13131.</p>
+    </div>
+</div>
+
+<div id="win-teaching" class="window" style="top: 200px; left: 80px; width: 550px;">
+    <div class="title-bar"><div class="title-bar-text">C:\Teaching_Portfolio</div><div class="title-bar-controls"><button aria-label="Close" onclick="toggleWin('win-teaching')"></button></div></div>
+    <div class="window-body">
+        <div class="cv-block">
+            <strong>Teaching Assistant - Quantitative Research Skills</strong> (Sept-Oct 2024)<br>
+            University of Helsinki. Supported students with R programming, factor analysis, and regression.
+        </div>
+        <div class="cv-block">
+            <strong>Teaching Assistant - Statistics & R Workshop</strong> (March-April 2023)<br>
+            Azim Premji University. Pioneering 4-day workshop for visually impaired participants using innovative pedagogical tools.
+        </div>
+    </div>
+</div>
+
+<div id="win-sys" class="window" style="top: 350px; left: 400px; width: 600px;">
+    <div class="title-bar"><div class="title-bar-text">Skills Diagnostics</div><div class="title-bar-controls"><button aria-label="Close" onclick="toggleWin('win-sys')"></button></div></div>
+    <div class="window-body">
+        <div class="terminal">
+            C:\> system_diagnostics --skills<br><br>
+            [SKILLS]: Python, R, STATA, tidyverse, Pandas, Matplotlib, Geopandas, Numpy, Beautiful Soup, Selenium, EasyOCR, NLTK, spaCy, Hugging face, Transformers, CSC server, Puhti, Allas, OpenCV.<br><br>
+            [METHODS]: Conjoint Experiments, Social Media Analysis (YouTube, Instagram, TikTok), Multivariate Analysis, Machine Learning, Representation Learning.<br><br>
+            C:\> _<span id="cursor">|</span>
+        </div>
+    </div>
+</div>
+
+<div id="win-contact" class="window" style="top: 250px; left: 50px; width: 450px;">
+    <div class="title-bar"><div class="title-bar-text">Contact_Information.doc</div><div class="title-bar-controls"><button aria-label="Close" onclick="toggleWin('win-contact')"></button></div></div>
+    <div class="window-body">
+        <p><strong>E-mail:</strong> <a href="mailto:vaibhav.agarwal@tum.de">vaibhav.agarwal@tum.de</a></p>
+        <p><strong>Work:</strong> +358 040-625-5999</p>
+        <p><strong>Website:</strong> econvaibhav.github.io</p>
+        <hr>
+        <p><strong>Location Map:</strong><br>
+        1. Born/Raised: Bangalore, India<br>
+        2. Master's: Helsinki, Finland<br>
+        3. PhD: Munich, Germany</p>
+    </div>
+</div>
+
+<div id="win-games" class="window" style="top: 100px; left: 400px; width: 400px;">
+    <div class="title-bar"><div class="title-bar-text">Snake.exe</div><div class="title-bar-controls"><button aria-label="Close" onclick="toggleWin('win-games')"></button></div></div>
+    <div class="window-body" style="background:#c0c0c0;">
+        <div id="snake-container">
+            <div class="game-stats">
+                <span>Score: <span id="current-score">0</span></span>
+                <span>Best: <span id="high-score">0</span></span>
+            </div>
+            <canvas id="snake-canvas" width="300" height="300"></canvas>
+            <div style="text-align:center; margin-top:10px;">
+                <button onclick="startSnake()">Start / Reset Game</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="taskbar">
+    <button class="start-button" onclick="toggleStartMenu()">
+        <img src="https://win98icons.alexmeub.com/icons/png/windows-0.png" width="18" style="margin-right:8px;">
+        Start
+    </button>
+    <div id="start-menu" class="start-menu">
+        <div class="start-item" onclick="toggleWin('win-about')">📄 About_Me.txt</div>
+        <div class="start-item" onclick="toggleWin('win-research')">📂 Research_Log</div>
+        <div class="start-item" onclick="toggleWin('win-pubs-explorer')">📚 Publications</div>
+        <div class="start-item" onclick="toggleWin('win-games')">🎮 Snake.exe</div>
+        <hr>
+        <div class="start-item" onclick="window.location.reload()">🔒 Restart System</div>
+    </div>
+    <div style="margin-left: auto; border: 1px inset gray; padding: 3px 12px; background: #c0c0c0; font-weight: bold;" id="clock">00:00</div>
+</div>
+
+<script>
+    let isInitialized = false;
+    function playStartup() {
+        if (!isInitialized) {
+            document.getElementById('startup-sound').play();
+            isInitialized = true;
+        }
+    }
+    function playClick() {
+        const sound = document.getElementById('click-sound');
+        sound.currentTime = 0;
+        sound.play();
+    }
+
+    function toggleWin(id) {
+        playClick();
+        const win = document.getElementById(id);
+        win.style.display = (win.style.display === 'none' || win.style.display === '') ? 'block' : 'none';
+        if(win.style.display === 'block') bringToFront(win);
+    }
+    function toggleStartMenu() {
+        playClick();
+        const menu = document.getElementById('start-menu');
+        menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+    }
+
+    document.querySelectorAll('.title-bar').forEach(header => {
+        header.onmousedown = function(e) {
+            let win = header.parentElement;
+            bringToFront(win);
+            let shiftX = e.clientX - win.getBoundingClientRect().left;
+            let shiftY = e.clientY - win.getBoundingClientRect().top;
+            function moveAt(pageX, pageY) {
+                win.style.left = pageX - shiftX + 'px';
+                win.style.top = pageY - shiftY + 'px';
+            }
+            function onMouseMove(e) { moveAt(e.pageX, e.pageY); }
+            document.addEventListener('mousemove', onMouseMove);
+            header.onmouseup = function() {
+                document.removeEventListener('mousemove', onMouseMove);
+                header.onmouseup = null;
+            };
+        };
+    });
+
+    function bringToFront(win) {
+        document.querySelectorAll('.window').forEach(w => w.style.zIndex = 10);
+        win.style.zIndex = 100;
+    }
+
+    function updateClock() {
+        const now = new Date();
+        document.getElementById('clock').innerText = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    }
+    setInterval(updateClock, 1000); updateClock();
+
+    // SNAKE LOGIC
+    let snakeGameActive = false;
+    let snakeTimeout;
+    const highScoreEl = document.getElementById('high-score');
+    highScoreEl.innerText = localStorage.getItem('snakeHighScore') || 0;
+
+    function startSnake() {
+        if(snakeGameActive) clearTimeout(snakeTimeout);
+        snakeGameActive = true;
+        const canvas = document.getElementById('snake-canvas');
+        const ctx = canvas.getContext('2d');
+        const scoreEl = document.getElementById('current-score');
+        let snake = [{x: 10, y: 10}, {x: 9, y: 10}, {x: 8, y: 10}];
+        let food = {x: 15, y: 15};
+        let dx = 1, dy = 0;
+        let score = 0;
+        let speed = 120;
+
+        function draw() {
+            ctx.fillStyle = "black"; ctx.fillRect(0,0,300,300);
+            ctx.fillStyle = "#f00"; ctx.fillRect(food.x*15, food.y*15, 14, 14);
+            ctx.fillStyle = "#0f0";
+            snake.forEach((p, index) => {
+                ctx.fillStyle = index === 0 ? "#0a0" : "#0f0";
+                ctx.fillRect(p.x*15, p.y*15, 14, 14);
+            });
+            let head = {x: snake[0].x + dx, y: snake[0].y + dy};
+            if(head.x < 0 || head.x >= 20 || head.y < 0 || head.y >= 20 || snake.some(p => p.x === head.x && p.y === head.y)) return gameOver();
+            if(head.x == food.x && head.y == food.y) {
+                score += 10;
+                scoreEl.innerText = score;
+                if(score > (localStorage.getItem('snakeHighScore') || 0)) {
+                    localStorage.setItem('snakeHighScore', score);
+                    highScoreEl.innerText = score;
+                }
+                food = {x: Math.floor(Math.random()*20), y: Math.floor(Math.random()*20)};
+                speed = Math.max(50, speed - 2);
+            } else { snake.pop(); }
+            snake.unshift(head);
+            snakeTimeout = setTimeout(draw, speed);
+        }
+        function gameOver() {
+            snakeGameActive = false;
+            ctx.fillStyle = "white"; ctx.textAlign = "center"; ctx.fillText("GAME OVER", 150, 150);
+        }
+        document.onkeydown = e => {
+            if(e.key === "ArrowUp" && dy !== 1) { dx=0; dy=-1; }
+            else if(e.key === "ArrowDown" && dy !== -1) { dx=0; dy=1; }
+            else if(e.key === "ArrowLeft" && dx !== 1) { dx=-1; dy=0; }
+            else if(e.key === "ArrowRight" && dx !== -1) { dx=1; dy=0; }
+        };
+        draw();
+    }
+</script>
+</body>
+</html>
