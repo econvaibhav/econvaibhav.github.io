@@ -12,12 +12,9 @@
 }
 
 [data-theme="light"] {
-    /* 🔵 Your Custom Light Blue Backgrounds */
-    --color-bg: #F2F8FC; 
-    --color-bg-alt: #E6F0F9; 
+    --color-bg: #FBF9F5;
+    --color-bg-alt: #F0EBE3;
     --color-surface: #FFFFFF;
-    
-    /* Text & Accents (Kept original professional maroon/slate) */
     --color-text: #2A2028;
     --color-text-secondary: #6A6060;
     --color-text-light: #9A908A;
@@ -25,13 +22,11 @@
     --color-accent-hover: #552435;
     --color-accent-light: rgba(107, 45, 62, 0.07);
     --color-accent-secondary: #8B6F4E;
-    
-    /* Borders adjusted to match the cooler blue tone */
-    --color-border: #D2E0EB;
-    --color-border-light: #E8F1F8;
+    --color-border: #DDD8CE;
+    --color-border-light: #EDE8DF;
     --color-warm-glow: rgba(107, 45, 62, 0.04);
     --color-card-shadow: rgba(42, 32, 40, 0.06);
-    --color-nav-bg: rgba(242, 248, 252, 0.92); /* Matches custom bg */
+    --color-nav-bg: rgba(251, 249, 245, 0.92);
     --icon-sun-display: none;
     --icon-moon-display: block;
 }
@@ -550,7 +545,7 @@ section + section { border-top: 1px solid var(--color-border-light); }
     object-fit: cover;
 }
 
-/* For logos that have too much whitespace and need padding */
+/* For logos that have too much whitespace and need padding (e.g., KOF, CP) */
 .cv-logo-wrapper.logo-padded img {
     width: 75%;
     height: 75%;
@@ -711,6 +706,7 @@ section + section { border-top: 1px solid var(--color-border-light); }
         height: 32px;
     }
 }
+
 
 /* ═══════════════════════════════════════
    INTERESTS 
@@ -1024,29 +1020,29 @@ footer a:hover { color: var(--color-accent); }
     .nav-links.active { display: flex; }
     .nav-toggle { display: block; }
 
-    .cv-group {
-        grid-template-columns: 1fr;
-    }
+.cv-group {
+    grid-template-columns: 1fr;
+}
 
-    .cv-download {
-        text-align: center;
-    }
+.cv-download {
+    text-align: center;
+}
 
-    .cv-category-label {
-        text-align: left;
-        padding: 0 0 12px 0;
-        font-size: 1rem;
-        font-weight: 600;
-        color: var(--color-text-secondary);
-    }
+.cv-category-label {
+    text-align: left;
+    padding: 0 0 12px 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+}
 
-    .cv-entries {
-        margin-left: 8px;
-    }
+.cv-entries {
+    margin-left: 8px;
+}
 
-    .cv-item.collapsible {
-        padding-left: 20px;
-    }
+.cv-item.collapsible {
+    padding-left: 20px;
+}
    
     .projects-grid { grid-template-columns: 1fr; }
     .interests-gateway { grid-template-columns: repeat(3, 1fr); }
