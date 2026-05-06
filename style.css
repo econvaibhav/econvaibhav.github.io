@@ -1056,3 +1056,118 @@ footer a:hover { color: var(--color-accent); }
     .photo-gallery { grid-template-columns: 1fr; }
     .book-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
 }
+
+
+
+
+
+
+
+
+
+
+
+/* ═══════════════════════════════════════
+   BLOG & CALENDAR STYLES
+═══════════════════════════════════════ */
+.theme-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--color-border-light);
+}
+
+.theme-btn {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.theme-btn:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+}
+
+.theme-btn.active {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: #fff;
+}
+
+/* 12-Month Calendar Grid */
+.yearly-calendar-wrapper {
+    margin-bottom: 48px;
+}
+
+.calendar-header {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--color-text);
+}
+
+.yearly-calendar {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 16px;
+}
+
+.month-container {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+}
+
+.month-name {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--color-text-light);
+    text-align: center;
+}
+
+.days-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+}
+
+.day-cell {
+    aspect-ratio: 1;
+    background: var(--color-bg-alt);
+    border-radius: 2px;
+    font-size: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: transparent; /* Hide numbers for a clean heatmap look */
+    transition: background 0.3s;
+}
+
+.day-cell.has-post {
+    background: var(--color-accent);
+    box-shadow: 0 0 4px var(--color-accent-light);
+    cursor: pointer;
+}
+
+.day-cell.has-post:hover {
+    background: var(--color-accent-hover);
+    transform: scale(1.2);
+}
+
+/* Hide posts when filtered out */
+.project-card.hidden {
+    display: none;
+}

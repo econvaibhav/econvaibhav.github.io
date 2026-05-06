@@ -1,13 +1,108 @@
-<main class="container">
-    <h1>Writing & Thoughts</h1>
-    <ul class="post-list">
-        <li>
-            <span class="date">May 2026</span>
-            <a href="posts/my-first-post.html">Understanding Modern Econometrics</a>
-        </li>
-        <li>
-            <span class="date">April 2026</span>
-            <a href="posts/research-update.html">Why Data Visualization Matters</a>
-        </li>
-    </ul>
-</main>
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog | Vaibhav Agarwal</title>
+    <meta name="description" content="Musings, updates, and short essays by Vaibhav Agarwal.">
+    <link rel="icon" href="favicon.png" type="image/png">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav>
+        <div class="nav-inner">
+            <a href="index.html" class="nav-name">VA</a>
+            <div class="nav-right">
+                <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('active')" aria-label="Toggle menu">
+                    <span></span><span></span><span></span>
+                </button>
+                <!-- ADDED THE BLOG LINK HERE -->
+                <ul class="nav-links">
+                    <li><a href="index.html">About</a></li>
+                    <li><a href="research.html">Research</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="projects.html">Projects</a></li>
+                    <li><a href="cv.html">CV</a></li>
+                    <li><a href="interests.html">Interests</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+                    <svg class="sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                    <svg class="moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="subpage-header">
+            <div class="breadcrumb">
+                <a href="index.html">Home</a> / Blog
+            </div>
+            <h1>Research Log & Essays</h1>
+            <p class="subpage-quote">Thoughts on algorithmic governance, data pipelines, and academic life.</p>
+        </div>
+
+        <div class="subpage-body">
+            
+            <!-- THEMES FILTER -->
+            <div class="theme-filters">
+                <button class="theme-btn active" data-filter="all">All Posts</button>
+                <button class="theme-btn" data-filter="algorithms">Algorithmic Governance</button>
+                <button class="theme-btn" data-filter="data">Data Science</button>
+                <button class="theme-btn" data-filter="academia">Academic Life</button>
+            </div>
+
+            <!-- CALENDAR HEATMAP -->
+            <div class="yearly-calendar-wrapper">
+                <div class="calendar-header">2026 Publication Activity</div>
+                <div class="yearly-calendar" id="yearly-calendar">
+                    <!-- JavaScript will inject the 12 months here -->
+                </div>
+            </div>
+
+            <!-- BLOG POSTS GRID -->
+            <!-- Note the data-theme and data-date attributes! -->
+            <div class="projects-grid" id="blog-grid">
+                
+                <div class="project-card" data-theme="algorithms" data-date="2026-05-14">
+                    <div class="project-label">May 14, 2026 · 5 min read</div>
+                    <h3>Trust in Algorithmic Decision Making</h3>
+                    <p>A deep dive into why humans trust machines, and what happens when those machines make mistakes in public governance frameworks.</p>
+                    <div class="project-tools"><span>Algorithms</span><span>Governance</span></div>
+                    <a href="#" class="project-link">Read Post →</a>
+                </div>
+
+                <div class="project-card" data-theme="data" data-date="2026-03-22">
+                    <div class="project-label">March 22, 2026 · 8 min read</div>
+                    <h3>Handling 3TB of Qualitative Data</h3>
+                    <p>My workflow for using OpenCV and Whisper to transcribe and analyze massive datasets on the Puhti and Allas servers.</p>
+                    <div class="project-tools"><span>Python</span><span>Data Pipelines</span></div>
+                    <a href="#" class="project-link">Read Post →</a>
+                </div>
+
+                <div class="project-card" data-theme="academia" data-date="2026-01-10">
+                    <div class="project-label">January 10, 2026 · 4 min read</div>
+                    <h3>Starting a PhD at TUM</h3>
+                    <p>Reflections on moving to Munich, settling into the AGAPP professorship, and outlining the first year of my doctoral research.</p>
+                    <div class="project-tools"><span>PhD Life</span><span>Munich</span></div>
+                    <a href="#" class="project-link">Read Post →</a>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Vaibhav Agarwal · Doctoral Researcher · <a href="https://www.tum.de/" target="_blank">Technical University of Munich</a></p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
